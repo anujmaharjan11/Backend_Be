@@ -4,8 +4,8 @@ from database import db
 
 class Follow(db.Model):
     id = db.Column(db.String(), primary_key=True, default=lambda: str(uuid.uuid4())) #initiating FOLLOW
-    from_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)   #the one being followed
-    to_user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    from_user_id = db.Column(db.String(), db.ForeignKey('user.id'), nullable=False)   
+    to_user_id = db.Column(db.String(), db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     __table_args__ = (
