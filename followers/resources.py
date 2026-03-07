@@ -17,21 +17,20 @@ class FollowerResource(Resource):
         current_user_id = get_jwt_identity()
         if not data:
             return {'message': 'Missing all'}, 400
-        # if 'from_user_id' not in data:
-        #     return {'message': 'Missing user id'}, 400
         if 'to_user_id' not in data:
             return {'message': 'Missing the following user id'}, 400
-        if 'created_at' not in data:
-            return {'message': 'Missing the created date'}, 400
-        
         to_user_id = data['to_user_id']
-        created_at = data['created_at']
-        follow = self.follow_manager.follow(current_user_id, to_user_id, created_at)
+        follow = self.follow_manager.follow(current_user_id, to_user_id)
+        if follow is None:
+            return {'message': 'User to follow does not exist in the system'}, 404
+
+        if not follow:
+            return {'message': 'You are already following this user'}, 400
+        
         response_data = {
-            'message': 'User followed the other user. Wow!',
+            'message': f'{current_user_id} is now following {to_user_id}',
             'id': follow.id
         }
         return response_data, 201
-    
 
 api.add_resource(FollowerResource, '/follow')
